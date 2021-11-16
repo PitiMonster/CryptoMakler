@@ -19,6 +19,7 @@ from app import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('authentication.urls')),
     path('investments', include(urls.investments)),
     path('funds', include(urls.funds)),
     path('invitations', include(urls.invitations)),
