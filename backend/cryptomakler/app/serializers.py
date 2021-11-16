@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import User, Fund, Investment, Coin, Asset
+from models import User, Fund, Investment, Coin, Asset, Invitation
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,4 +30,10 @@ class CoinSerializer(serializers.ModelSerializer):
 class AssetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
+        field = '__all__'
+
+
+class InvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invitation
         field = '__all__'
