@@ -51,3 +51,12 @@ class Asset(models.models):
 
     def __str__(self) -> str:
         return f'Asset: {self.coin} of {self.fund}'
+
+
+class Invitation(models.Model):
+    sender = models.ForeignKey(User)
+    receiver = models.ForeignKey(User)
+    fund = models.ForeignKey(Fund)
+
+    def __str__(self) -> str:
+        return f'Invitation from {self.sender} to {self.receiver} to fund: {self.fund} '
