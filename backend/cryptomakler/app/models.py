@@ -1,20 +1,5 @@
 from django.db import models
-
-
-class User(models.Model):
-    ROLE_CHOICES = [
-        'INV', 'Investor',
-        'BRK', 'Broker'
-    ]
-
-    username = models.CharField(unique=True, max_length=32)
-    createdAt = models.DateTimeField(auto_now_add=True)
-    role = models.CharField(max_length=3, choices=ROLE_CHOICES)
-    password = models.CharField(max_length=64)
-    email = models.EmailField(max_length=32)
-
-    def __str__(self):
-        return self.username
+from django.contrib.auth.models import User
 
 
 class Fund(models.Model):
@@ -31,6 +16,7 @@ class Investment(models.Model):
     fund = models.ForeignKey(Fund)
     investor = models.ForeignKey(User)
     share_amount = models.FloatField()
+    initial_value = models.FloatField()
 
     def __str__(self) -> str:
         return f'Investment of {self.investor} in {self.fund}'
