@@ -4,17 +4,17 @@ from django.contrib.auth.models import User
 
 class Fund(models.Model):
     name = models.CharField(max_length=32)
-    broker = models.ForeignKey(User)
+    broker = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     total_value = models.FloatField()
     fee = models.FloatField()
 
     def __str__(self) -> str:
-        return self.name
+        return f'{self.name}'
 
 
 class Investment(models.Model):
-    fund = models.ForeignKey(Fund)
-    investor = models.ForeignKey(User)
+    fund = models.ForeignKey(Fund, on_delete=models.DO_NOTHING)
+    investor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     share_amount = models.FloatField()
     initial_value = models.FloatField()
 
@@ -30,9 +30,9 @@ class Coin(models.Model):
         return self.name
 
 
-class Asset(models.models):
-    fund = models.ForeignKey(Fund)
-    coin = models.ForeignKey(Coin)
+class Asset(models.Model):
+    fund = models.ForeignKey(Fund, on_delete=models.CASCADE)
+    coin = models.ForeignKey(Coin, on_delete=models.DO_NOTHING)
     coin_amount = models.FloatField()
 
     def __str__(self) -> str:
@@ -40,9 +40,9 @@ class Asset(models.models):
 
 
 class Invitation(models.Model):
-    sender = models.ForeignKey(User)
-    receiver = models.ForeignKey(User)
-    fund = models.ForeignKey(Fund)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_invitations')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_invitations')
+    fund = models.ForeignKey(Fund, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f'Invitation from {self.sender} to {self.receiver} to fund: {self.fund} '
