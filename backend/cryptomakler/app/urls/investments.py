@@ -1,5 +1,7 @@
 from django.urls import path
+from ..views import InvestmentsView
 
 urlpatterns = [
-    path('', lambda: ''),  # get all investments / post - create investment (broker only)
+    # get all investments
+    path('', InvestmentsView.as_view()),
 ]

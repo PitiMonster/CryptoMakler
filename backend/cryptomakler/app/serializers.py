@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import User, Fund, Investment, Coin, Asset, Invitation
+from .models import User, Fund, Investment, Coin, Asset, Invitation
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,6 +13,17 @@ class FundSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fund
         fields = '__all__'
+        validators = []
+
+    def validate(self, data):
+        """
+        Check if fee is positive and less than 100
+        """
+        print(data)
+        if float(data["fee"]) > 100 or float(data["fee"]) < 0:
+            raise serializers.ValidationError(
+                "Fee must be positive and less than 100")
+        return data
 
 
 class InvestmentSerializer(serializers.ModelSerializer):
@@ -30,10 +41,10 @@ class CoinSerializer(serializers.ModelSerializer):
 class AssetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
-        field = '__all__'
+        fields = '__all__'
 
 
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
-        field = '__all__'
+        fields = '__all__'
