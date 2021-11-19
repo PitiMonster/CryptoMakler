@@ -13,9 +13,9 @@ class FundSerializer(serializers.ModelSerializer):
     investors = serializers.SerializerMethodField()
 
     def get_investors(self, obj):
-        investments = InvestmentSummarySerializer(obj.investments, many=True).data
+        investments = InvestmentSummarySerializer(
+            obj.investments, many=True).data
         return investments
-
 
     class Meta:
         model = Fund
@@ -53,7 +53,7 @@ class InvestmentSummarySerializer(serializers.ModelSerializer):
 class CoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coin
-        fields = '__all__'
+        fields = ["id", 'name']
 
 
 class AssetSerializer(serializers.ModelSerializer):

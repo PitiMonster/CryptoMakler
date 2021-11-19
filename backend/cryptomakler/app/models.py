@@ -105,13 +105,13 @@ class Coin(models.Model):
         return coin_price
 
     def __str__(self):
-        return self.name
+        return self.name + ' ' + str(self.id)
 
 
 class Asset(models.Model):
     fund = models.ForeignKey(Fund, on_delete=models.CASCADE, related_name='assets')
     coin = models.ForeignKey(Coin, on_delete=models.DO_NOTHING)
-    coin_amount = models.FloatField()
+    coin_amount = models.FloatField(default=0)
     fund_percent = models.FloatField(default=0)
 
     def calculate_total_price(self):
@@ -120,7 +120,7 @@ class Asset(models.Model):
         return asset_price
 
     def __str__(self) -> str:
-        return f'Asset: {self.coin} of {self.fund}'
+        return f'Asset: {self.coin} of {self.fund}; id={self.id}'
 
 
 class Invitation(models.Model):

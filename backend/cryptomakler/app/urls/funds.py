@@ -1,6 +1,6 @@
 from django.urls import path
 
-from app.views.views import FundsListView, FundInvitationView, FundInvestmentView, FundView
+from app.views.views import FundsListView, FundInvitationView, FundInvestmentView, FundView, FundAssetsView
 # from ..views/funds import FundsListView, FundInvitationView,  FundView, FundInvestmentView
 
 
@@ -11,5 +11,7 @@ urlpatterns = [
     # del - remove investment / patch - edit investment data
     path('<int:fund_id>/investment/<int:investment_id>/',
          FundInvestmentView.as_view()),
-    path('<int:fund_id>/invitations/', FundInvitationView.as_view())
+    path('<int:fund_id>/invitations/', FundInvitationView.as_view()),
+    # get all assets of fund / put - modify fund percents of existsing assets and add new ones
+    path('<int:fund_id>/assets/', FundAssetsView.as_view()),
 ]
