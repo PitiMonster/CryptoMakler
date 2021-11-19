@@ -13,7 +13,7 @@ class CoinsListView(APIView):
         user_id = request.user.id
 
         user = User.objects.get(id=user_id)
-        if (user.userprofile.role != 'BRK'):
+        if user.userprofile.role != 'BRK':
             return Response('You are not permitted to this action!', status=status.HTTP_403_FORBIDDEN)
 
         try:

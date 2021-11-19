@@ -140,4 +140,8 @@ class FakeAPI(models.Model):
         print('init api')
 
     def getCoinPrice(self, coin) -> float:
-        return random.random() * 1000
+        if coin.name == 'BTC':
+            return 2.0
+        else:
+            return 1.0
+        # return random.random() * 1000

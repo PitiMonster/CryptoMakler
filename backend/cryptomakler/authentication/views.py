@@ -31,7 +31,6 @@ class RegisterView(APIView):
 
             user_serializer = RegisterSerializer(data=user_data)
             if not user_serializer.is_valid():
-                print(user_serializer.errors)
                 raise Exception('Problem with data validation')
 
             user = user_serializer.save()
@@ -44,13 +43,11 @@ class RegisterView(APIView):
 
             if not role_serializer.is_valid():
                 user.delete()
-                print(role_serializer.errors)
                 raise Exception('Problem with role selection')
 
             role_serializer.save()
             return Response("User Created Successfully. Now login to get your token", status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(e)
             return Response({str(e)}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 

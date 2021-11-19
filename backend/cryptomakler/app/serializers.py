@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class FundSerializer(serializers.ModelSerializer):
     investors = serializers.SerializerMethodField()
+    total_value = serializers.FloatField(source='calculate_total_price')
 
     def get_investors(self, obj):
         investments = InvestmentSummarySerializer(
@@ -26,7 +27,6 @@ class FundSerializer(serializers.ModelSerializer):
         """
         Check if fee is positive and less than 100
         """
-        print(data)
         if float(data["fee"]) > 100 or float(data["fee"]) < 0:
             raise serializers.ValidationError(
                 "Fee must be positive and less than 100")
@@ -57,6 +57,7 @@ class CoinSerializer(serializers.ModelSerializer):
 
 
 class AssetSerializer(serializers.ModelSerializer):
+    total_value = serializers.FloatField(source='calculate_total_price')
     class Meta:
         model = Asset
         fields = '__all__'

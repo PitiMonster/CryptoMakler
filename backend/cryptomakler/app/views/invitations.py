@@ -15,7 +15,6 @@ class InvitationsListView(APIView):
         try:
             invitations = Invitation.objects.filter(
                 models.Q(sender=user_id) | models.Q(receiver=user_id))
-            print(invitations)
             context = InvitationSerializer(invitations, many=True).data
         except Exception as e:
             return Response(str(e), status=status.HTTP_404_NOT_FOUND)
@@ -28,9 +27,7 @@ class FundInvitationView(APIView):
         user = User.objects.get(id=request.user.id)
         receiver = User.objects.get(username=request.POST.get('username', ''))
         fund = Fund.objects.get(id=fund_id)
-        print(request.user)
-        print(fund.broker)
-        if(request.user != fund.broker):
+        if request.user != fund.broker:
             return Response('You are not permitted to send invitation to this fund!', status=status.HTTP_403_FORBIDDEN)
 
         data = {
@@ -50,9 +47,7 @@ class FundInvitationView(APIView):
 class OneInvitationView(APIView):
     def post(self, request, invitation_id):
         invitation = Invitation.objects.get(id=invitation_id)
-        print(request.user)
-        print(invitation.receiver)
-        if(request.user != invitation.receiver):
+        if request.user != invitation.receiver:
             return Response('You are not permitted to response to this invitation!', status=status.HTTP_403_FORBIDDEN)
 
         investment = InvestmentSerializer().create(
@@ -67,7 +62,7 @@ class OneInvitationView(APIView):
         try:
             invitation = Invitation.objects.get(id=invitation_id)
 
-            if(request.user != invitation.receiver):
+            if request.user != invitation.receiver:
                 return Response('You are not permitted to response to this invitation!', status=status.HTTP_403_FORBIDDEN)
 
             invitation.delete()

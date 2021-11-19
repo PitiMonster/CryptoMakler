@@ -13,7 +13,6 @@ class InvestmentsView(APIView):
 
         try:
             investments = Investment.objects.filter(investor=user_id)
-            print(investments)
             context = InvestmentSerializer(investments, many=True).data
         except Exception as e:
             return Response(str(e), status=status.HTTP_404_NOT_FOUND)
