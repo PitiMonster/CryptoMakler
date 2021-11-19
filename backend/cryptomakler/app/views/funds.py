@@ -10,6 +10,8 @@ from ..serializers import FundSerializer
 from ..enums import InvestmentOperationEnum
 from ..utils import is_float
 
+from app.apps import APIClient
+
 
 class FundsListView(APIView):
 
