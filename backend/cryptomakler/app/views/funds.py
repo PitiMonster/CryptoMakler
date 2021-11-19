@@ -10,8 +10,6 @@ from ..serializers import FundSerializer
 from ..enums import InvestmentOperationEnum
 from ..utils import is_float
 
-from app.apps import APIClient
-
 
 class FundsListView(APIView):
 
@@ -89,29 +87,22 @@ class FundInvestmentView(APIView):
                 if not is_float or float(fiat_amount) <= 0:
                     raise Exception('Field `amount` must be greater than 0!')
 
-            fiat_amount = float(fiat_amount)
-            # TODO calculate share_price
-            share_price = 1.0
-
-            share_diff_amount = fiat_amount / share_price
             if transaction_type == InvestmentOperationEnum.WITHDRAW_ALL:
-                investment.share_amount = 0.0
-                investment.initial_value = 0.0
-
-            elif transaction_type == InvestmentOperationEnum.WITHDRAW:
-                if share_diff_amount > investment.share_amount:
-                    raise Exception('Investor does not have enough funds')
-
-                investment.initial_value -= investment.initial_value * \
-                    share_diff_amount / investment.share_amount
-                investment.share_amount -= share_diff_amount
-
-            elif transaction_type == InvestmentOperationEnum.DEPOSIT:
-                investment.share_amount += share_diff_amount
-                investment.initial_value += fiat_amount
-
+                investment.remove_share_amount(investment.share_amount)
             else:
-                raise Exception('Incorrect value in field `type`')
+                fiat_amount = float(fiat_amount)
+
+                share_price = investment.fund.calculate_share_price()
+                share_diff_amount = fiat_amount / share_price
+
+                if transaction_type == InvestmentOperationEnum.WITHDRAW:
+                    investment.remove_share_amount(share_diff_amount)
+
+                elif transaction_type == InvestmentOperationEnum.DEPOSIT:
+                    investment.add_share_amount(fiat_amount, share_diff_amount)
+
+                else:
+                    raise Exception('Incorrect value in field `type`')
 
             investment.save()
 
@@ -124,6 +115,9 @@ class FundInvestmentView(APIView):
             investment = Investment.objects.get(id=investment_id, fund=fund_id)
             if investment.fund.broker != request.user:
                 raise Exception('You are not authorized!')
+
+            if investment.share_amount != 0:
+                raise Exception('You cannot delete an investment with non-zero balance!')
 
             investment.delete()
             return Response(f'Fund deleted successfully', status.HTTP_204_NO_CONTENT)
