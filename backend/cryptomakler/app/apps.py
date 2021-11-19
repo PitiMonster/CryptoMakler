@@ -11,7 +11,6 @@ class AppConfig(AppConfig):
             return True
         # you must import your modules here
         # to avoid AppRegistryNotReady exception
-        print('siema siema')
         global APIClient
         from .models import FakeAPI
         APIClient = FakeAPI()

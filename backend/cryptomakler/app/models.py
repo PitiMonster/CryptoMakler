@@ -11,7 +11,7 @@ class Fund(models.Model):
     fee = models.FloatField()
 
     def __str__(self) -> str:
-        return f'{self.name}'
+        return f'{self.name} {self.id}'
 
 
 class Investment(models.Model):
@@ -30,17 +30,17 @@ class Coin(models.Model):
     name = models.CharField(max_length=32)
 
     def __str__(self):
-        return self.name
+        return self.name + ' ' + str(self.id)
 
 
 class Asset(models.Model):
     fund = models.ForeignKey(Fund, on_delete=models.CASCADE)
     coin = models.ForeignKey(Coin, on_delete=models.DO_NOTHING)
-    coin_amount = models.FloatField()
+    coin_amount = models.FloatField(default=0)
     fund_percent = models.FloatField(default=0)
 
     def __str__(self) -> str:
-        return f'Asset: {self.coin} of {self.fund}'
+        return f'Asset: {self.coin} of {self.fund}; id={self.id}'
 
 
 class Invitation(models.Model):
@@ -55,9 +55,6 @@ class Invitation(models.Model):
 
 
 class FakeAPI(models.Model):
-
-    def __init__(self, *args, **kwargs):
-        print('dupa dupsko')
 
     def getCoinPrice(self, coin) -> float:
         return random.random() * 1000
