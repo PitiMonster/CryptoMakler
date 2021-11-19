@@ -10,6 +10,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class FundSerializer(serializers.ModelSerializer):
+    investors = serializers.SerializerMethodField()
+
+    def get_investors(self, obj):
+        investments = InvestmentSummarySerializer(obj.investments, many=True).data
+        return investments
+
+
     class Meta:
         model = Fund
         fields = '__all__'
@@ -30,6 +37,17 @@ class InvestmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Investment
         fields = '__all__'
+
+
+class InvestmentSummarySerializer(serializers.ModelSerializer):
+    investor = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+
+    class Meta:
+        model = Investment
+        fields = ['investor', 'share_amount']
 
 
 class CoinSerializer(serializers.ModelSerializer):

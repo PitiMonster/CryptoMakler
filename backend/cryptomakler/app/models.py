@@ -13,13 +13,13 @@ class Fund(models.Model):
 
 
 class Investment(models.Model):
-    fund = models.ForeignKey(Fund, on_delete=models.DO_NOTHING)
+    fund = models.ForeignKey(Fund, on_delete=models.DO_NOTHING, related_name='investments')
     investor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     share_amount = models.FloatField(default=0)
     initial_value = models.FloatField(default=0)
 
     def __str__(self) -> str:
-        return f'Investment of {self.investor} in {self.fund}'
+        return f'Investment({self.pk}) of {self.investor} in {self.fund}({self.fund.pk})'
 
 
 class Coin(models.Model):
