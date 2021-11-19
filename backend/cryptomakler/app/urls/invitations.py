@@ -1,5 +1,6 @@
 from django.urls import path
-from ..views import InvitationsListView, OneInvitationView
+from app.views.views import InvitationsListView, OneInvitationView
+
 urlpatterns = [
     # get all invitations / post - create invitation (broker only)
     path('', InvitationsListView.as_view()),

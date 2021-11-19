@@ -1,5 +1,8 @@
 from django.urls import path
-from ..views import FundsListView, FundInvitationView,  FundView, FundInvestmentView
+
+from app.views.views import FundsListView, FundInvitationView, FundInvestmentView, FundView
+# from ..views/funds import FundsListView, FundInvitationView,  FundView, FundInvestmentView
+
 
 urlpatterns = [
     path('', FundsListView.as_view()),  # get all funds / post - create fund
