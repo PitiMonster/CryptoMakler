@@ -7,8 +7,9 @@ class FundInvestorModel {
   String investor;
   @JsonKey(name: 'share_amount')
   double shareAmount;
-
-  FundInvestorModel(this.investor, this.shareAmount);
+  @JsonKey(name: 'investment_id')
+  int investorId;
+  FundInvestorModel(this.investor, this.shareAmount, this.investorId);
 
   factory FundInvestorModel.fromJson(Map<String, dynamic> json) =>
       _$FundInvestorModelFromJson(json);

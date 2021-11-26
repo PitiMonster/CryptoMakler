@@ -112,6 +112,7 @@ class FundInvestmentView(APIView):
 
             return Response(f'Investment updated successfully', status=status.HTTP_201_CREATED)
         except Exception as e:
+            print(e)
             return Response({str(e)}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
     def delete(self, request, fund_id, investment_id):

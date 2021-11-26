@@ -65,6 +65,31 @@ class FundsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateUserFund(
+      int fundId, int investmentId, double amount, String type) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$apiUrl/funds/$fundId/investment/$investmentId/'),
+        headers: {
+          'Authorization': 'Bearer $_token',
+        },
+        body: {
+          'amount': amount.toString(),
+          'type': type,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final fund = FundModel.fromJson(data);
+        funds.add(fund);
+        notifyListeners();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<void> getAssetsOfFund(int fundId) async {
     try {
       final response = await http.get(
@@ -92,14 +117,12 @@ class FundsProvider with ChangeNotifier {
   Future<void> updateAssets(int fundId, List<AssetModel> newAssets) async {
     try {
       print({
-        "coins": {
-          json.encode(newAssets
-              .map((asset) => {
-                    'id': asset.id,
-                    'percent': asset.fundPercent,
-                  })
-              .toList()),
-        }
+        "coins": newAssets
+            .map((asset) => {
+                  'id': asset.coinId,
+                  'percent': asset.fundPercent,
+                })
+            .toList()
       });
       final response = await http.put(
         Uri.parse('$apiUrl/funds/$fundId/assets/'),
@@ -109,7 +132,7 @@ class FundsProvider with ChangeNotifier {
         body: json.encode({
           "coins": newAssets
               .map((asset) => {
-                    'id': asset.id,
+                    'id': asset.coinId,
                     'percent': asset.fundPercent,
                   })
               .toList()

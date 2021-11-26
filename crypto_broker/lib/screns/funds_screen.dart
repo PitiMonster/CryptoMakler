@@ -23,6 +23,7 @@ class _FundsScreenState extends State<FundsScreen> {
   @override
   Widget build(BuildContext context) {
     final funds = Provider.of<FundsProvider>(context).funds;
+    double amount = 0;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -59,7 +60,8 @@ class _FundsScreenState extends State<FundsScreen> {
                             fontSize: 20, fontWeight: FontWeight.bold)),
                     leading: Text('${funds[index].fee}%',
                         style: const TextStyle(fontSize: 16)),
-                    subtitle: Text('${funds[index].totalValue}\$'),
+                    subtitle:
+                        Text('${funds[index].totalValue.toStringAsFixed(2)}\$'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -73,7 +75,8 @@ class _FundsScreenState extends State<FundsScreen> {
                               MaterialPageRoute(
                                 builder: (context) => EditFundScreen(
                                   fundId: funds[index].id,
-                                  assets: Provider.of<FundsProvider>(context, listen: false)
+                                  assets: Provider.of<FundsProvider>(context,
+                                          listen: false)
                                       .assets,
                                 ),
                               ),
@@ -110,6 +113,78 @@ class _FundsScreenState extends State<FundsScreen> {
                           itemCount: funds[index].investors.length,
                           itemBuilder: (context, i) {
                             return ListTile(
+                              onTap: () async {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('User deposit'),
+                                        content: Column(
+                                          children: [
+                                            TextField(
+                                              decoration: InputDecoration(
+                                                labelText: 'Amount',
+                                              ),
+                                              onChanged: (value) {
+                                                amount = double.parse(value);
+                                              },
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                await Provider.of<
+                                                            FundsProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .updateUserFund(
+                                                        funds[index].id,
+                                                        funds[index]
+                                                            .investors[i]
+                                                            .investorId,
+                                                        amount,
+                                                        'WITHDRAW');
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Withdraw'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                await Provider.of<
+                                                            FundsProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .updateUserFund(
+                                                        funds[index].id,
+                                                        funds[index]
+                                                            .investors[i]
+                                                            .investorId,
+                                                        amount,
+                                                        'DEPOSIT');
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Deposit'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                await Provider.of<
+                                                            FundsProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .updateUserFund(
+                                                        funds[index].id,
+                                                        funds[index]
+                                                            .investors[i]
+                                                            .investorId,
+                                                        amount,
+                                                        'WITHDRAW_ALL');
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Withdraw all'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              },
                               title: Text(funds[index].investors[i].investor),
                               trailing: Text(
                                   '${funds[index].investors[i].shareAmount}\$'),

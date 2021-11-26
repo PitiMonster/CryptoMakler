@@ -12,6 +12,7 @@ AssetModel _$AssetModelFromJson(Map<String, dynamic> json) => AssetModel(
       coinAmount: (json['coin_amount'] as num).toDouble(),
       fundPercent: (json['fund_percent'] as num).toDouble(),
       coin: json['coin'] as String,
+      coinId: json['coin_id'] as int,
       fund: json['fund'] as int,
     );
 
@@ -20,6 +21,7 @@ Map<String, dynamic> _$AssetModelToJson(AssetModel instance) =>
       'id': instance.id,
       'fund': instance.fund,
       'total_value': instance.totalValue,
+      'coin_id': instance.coinId,
       'coin_amount': instance.coinAmount,
       'fund_percent': instance.fundPercent,
       'coin': instance.coin,

@@ -42,7 +42,7 @@ class _EditFundScreenState extends State<EditFundScreen> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Add Asset'),
+                  title: Text('Add Coin'),
                   content: Column(
                     children: [
                       DropdownButton(
@@ -57,17 +57,21 @@ class _EditFundScreenState extends State<EditFundScreen> {
                       ),
                       TextButton(
                           onPressed: () async {
+                            widget.assets.removeWhere((e) => e.coinId == item);
+
                             // get the fundPercent sum of widget.assets
                             double sum = 0;
                             widget.assets.forEach((e) {
                               sum += e.fundPercent;
                             });
+                            // remove from widget.assets if coinId is item
                             widget.assets.add(AssetModel(
-                                id: item,
+                                id: widget.assets.length,
                                 totalValue: 0,
                                 coinAmount: 0,
                                 fundPercent: 100 - sum,
                                 coin: '',
+                                coinId: item,
                                 fund: widget.fundId));
                             await Provider.of<FundsProvider>(context,
                                     listen: false)
