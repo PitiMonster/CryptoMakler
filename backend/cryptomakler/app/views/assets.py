@@ -37,13 +37,14 @@ class FundAssetsView(APIView):
             for coin in coins:
                 sum_of_percents += float(coin['percent'])
 
-            if sum_of_percents != 100:
+            if abs(sum_of_percents - 100) >= 1e-08:
                 return Response('Bad division of assets! Sum of percents must equal 100', status=status.HTTP_400_BAD_REQUEST)
 
             assets = Asset.objects.filter(fund=fund_id)
 
             for asset in assets.iterator():
                 asset.fund_percent = 0
+                asset.save()
 
             for coin in coins:
                 coinObject = Coin.objects.get(id=coin['id'])
