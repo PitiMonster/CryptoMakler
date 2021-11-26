@@ -71,6 +71,10 @@ class CoinSerializer(serializers.ModelSerializer):
 
 class AssetSerializer(serializers.ModelSerializer):
     total_value = serializers.FloatField(source='calculate_total_price')
+    coin = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
 
     class Meta:
         model = Asset
