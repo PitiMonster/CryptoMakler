@@ -76,6 +76,11 @@ class AssetSerializer(serializers.ModelSerializer):
         slug_field='name'
     )
 
+    coin_id = serializers.SerializerMethodField()
+
+    def get_coin_id(self, obj):
+        return obj.coin.id
+
     class Meta:
         model = Asset
         fields = '__all__'
