@@ -45,9 +45,13 @@ class InvestmentSummarySerializer(serializers.ModelSerializer):
         slug_field='username'
     )
 
+    investor_id = serializers.SerializerMethodField()
+    def get_investor_id(self, obj):
+        return obj.investor.id
+
     class Meta:
         model = Investment
-        fields = ['investor', 'share_amount']
+        fields = ['investor', 'investor_id', 'share_amount']
 
 
 class InvestmentListSerializer(serializers.ModelSerializer):
@@ -77,7 +81,6 @@ class AssetSerializer(serializers.ModelSerializer):
     )
 
     coin_id = serializers.SerializerMethodField()
-
     def get_coin_id(self, obj):
         return obj.coin.id
 
