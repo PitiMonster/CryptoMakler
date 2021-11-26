@@ -57,17 +57,21 @@ class _EditFundScreenState extends State<EditFundScreen> {
                       ),
                       TextButton(
                           onPressed: () async {
+                            // get the fundPercent sum of widget.assets
+                            double sum = 0;
+                            widget.assets.forEach((e) {
+                              sum += e.fundPercent;
+                            });
+                            widget.assets.add(AssetModel(
+                                id: item,
+                                totalValue: 0,
+                                coinAmount: 0,
+                                fundPercent: 100 - sum,
+                                coin: '',
+                                fund: widget.fundId));
                             await Provider.of<FundsProvider>(context,
                                     listen: false)
-                                .updateAssets(widget.fundId, [
-                              AssetModel(
-                                  id: item,
-                                  totalValue: 0,
-                                  coinAmount: 0,
-                                  fundPercent: 0,
-                                  coin: '',
-                                  fund: widget.fundId)
-                            ]);
+                                .updateAssets(widget.fundId, widget.assets);
                             Navigator.of(context).pop();
                           },
                           child: Text('Add'))
