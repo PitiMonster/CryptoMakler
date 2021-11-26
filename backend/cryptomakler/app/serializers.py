@@ -45,13 +45,13 @@ class InvestmentSummarySerializer(serializers.ModelSerializer):
         slug_field='username'
     )
 
-    investor_id = serializers.SerializerMethodField()
-    def get_investor_id(self, obj):
-        return obj.investor.id
+    investment_id = serializers.SerializerMethodField()
+    def get_investment_id(self, obj):
+        return obj.id
 
     class Meta:
         model = Investment
-        fields = ['investor', 'investor_id', 'share_amount']
+        fields = ['investor', 'investment_id', 'share_amount']
 
 
 class InvestmentListSerializer(serializers.ModelSerializer):
