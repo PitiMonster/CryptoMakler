@@ -132,13 +132,13 @@ class _EditFundScreenState extends State<EditFundScreen> {
                         ),
                       ),
                       subtitle: Text(
-                        'amount: ${widget.assets[index].coinAmount.toString()}',
+                        'amount: ${widget.assets[index].coinAmount.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontSize: 15,
                         ),
                       ),
                       trailing: Text(
-                        '${widget.assets[index].totalValue.toString()} PLN',
+                        '${widget.assets[index].totalValue.toStringAsFixed(2)} PLN',
                         style: const TextStyle(
                           fontSize: 15,
                         ),
