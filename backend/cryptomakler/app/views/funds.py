@@ -17,7 +17,7 @@ class FundsListView(APIView):
         user_id = request.user.id
 
         user = User.objects.get(id=user_id)
-        if (user.userprofile.role != 'BRK'):
+        if user.userprofile.role != 'BRK':
             return Response('You are not permitted to this action!', status=status.HTTP_403_FORBIDDEN)
 
         try:
@@ -29,7 +29,11 @@ class FundsListView(APIView):
         return Response(context)
 
     def post(self, request):
-        user = User.objects.get(id=request.user.id)
+        user_id = request.user.id
+
+        user = User.objects.get(id=user_id)
+        if user.userprofile.role != 'BRK':
+            return Response('You are not permitted to this action!', status=status.HTTP_403_FORBIDDEN)
 
         data = {
             "name": request.POST.get('name', ''),

@@ -44,13 +44,12 @@ class FundAssetsView(APIView):
 
             for asset in assets.iterator():
                 asset.fund_percent = 0
-                asset.save()
 
             for coin in coins:
                 coinObject = Coin.objects.get(id=coin['id'])
                 asset, _ = Asset.objects.get_or_create(
                     coin=coinObject, fund=fund)
-                asset.fund_percent = coin['percent']
+                asset.fund_percent = float(coin['percent'])
                 asset.save()
 
             assets = Asset.objects.filter(fund=fund_id)

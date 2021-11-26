@@ -90,6 +90,11 @@ class Investment(models.Model):
         self.fund.remove_share_amount(share_amount_diff)
         self.save()
 
+    def calculate_total_price(self):
+        share_price = self.fund.calculate_share_price()
+        total_price = self.share_amount * share_price
+        return total_price
+
     def __str__(self) -> str:
         return f'Investment({self.pk}) of {self.investor} in {self.fund}({self.fund.pk})'
 
@@ -141,7 +146,8 @@ class FakeAPI(models.Model):
 
     def getCoinPrice(self, coin) -> float:
         if coin.name == 'BTC':
-            return 2.0
+            price = 2.0
         else:
-            return 1.0
+            price = 1.0
+        return price
         # return random.random() * 1000

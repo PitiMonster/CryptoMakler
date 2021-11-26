@@ -4,7 +4,7 @@ from rest_framework import status
 from django.db import models
 
 from django.contrib.auth.models import User
-from ..models import Fund, Invitation
+from ..models import Fund, Invitation, Investment
 from ..serializers import FundSerializer, InvestmentSerializer, InvitationSerializer
 
 
@@ -24,24 +24,30 @@ class InvitationsListView(APIView):
 
 class FundInvitationView(APIView):
     def post(self, request, fund_id):
-        user = User.objects.get(id=request.user.id)
-        receiver = User.objects.get(username=request.POST.get('username', ''))
-        fund = Fund.objects.get(id=fund_id)
-        if request.user != fund.broker:
-            return Response('You are not permitted to send invitation to this fund!', status=status.HTTP_403_FORBIDDEN)
-
-        data = {
-            "sender": user,
-            "receiver": receiver,
-            "fund": fund,
-        }
-
         try:
+            user = User.objects.get(id=request.user.id)
+            receiver = User.objects.get(username=request.POST.get('username', ''))
+            fund = Fund.objects.get(id=fund_id)
+            if request.user != fund.broker:
+                return Response('You are not permitted to send invitation to this fund!', status=status.HTTP_403_FORBIDDEN)
+
+            if Invitation.objects.filter(sender=user, receiver=receiver, fund=fund).exists():
+                raise Exception('Invitation already sent!')
+
+            if Investment.objects.filter(fund=fund, investor=receiver).exists():
+                raise Exception('User already belongs to this fund!')
+
+            data = {
+                "sender": user,
+                "receiver": receiver,
+                "fund": fund,
+            }
+
             invitation = InvitationSerializer().create(data)
             invitation.save()
+            return Response(FundSerializer(fund).data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-        return Response(FundSerializer(fund).data, status=status.HTTP_201_CREATED)
 
 
 class OneInvitationView(APIView):

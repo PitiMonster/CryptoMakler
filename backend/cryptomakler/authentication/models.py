@@ -8,7 +8,7 @@ class UserProfile(models.Model):
         ('BRK', 'Broker')
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
     role = models.CharField(max_length=3, choices=ROLE_CHOICES, default='INV')
 
     def __str__(self):

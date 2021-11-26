@@ -50,6 +50,19 @@ class InvestmentSummarySerializer(serializers.ModelSerializer):
         fields = ['investor', 'share_amount']
 
 
+class InvestmentListSerializer(serializers.ModelSerializer):
+    fund = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='name'
+    )
+
+    total_value = serializers.FloatField(source='calculate_total_price')
+
+    class Meta:
+        model = Investment
+        fields = ['fund', 'total_value']
+
+
 class CoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coin
@@ -58,6 +71,7 @@ class CoinSerializer(serializers.ModelSerializer):
 
 class AssetSerializer(serializers.ModelSerializer):
     total_value = serializers.FloatField(source='calculate_total_price')
+
     class Meta:
         model = Asset
         fields = '__all__'
